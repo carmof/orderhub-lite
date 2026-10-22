@@ -1,31 +1,21 @@
 {
-  "name": "ts-service-starter",
+  "name": "orderhub-lite",
   "version": "1.0.0",
   "description": "",
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "vitest run",
     "test:watch": "vitest run --watch",
     "coverage": "vitest run --coverage",
-    "dev": "tsx watch src/index.ts",
-    "build": "tsc -p tsconfig.build.json",
-    "typecheck": "tsc --noEmit",
     "start": "node --enable-source-maps dist/index.js",
-    "lint": "eslint .",
     "prepare": "husky",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
-  },
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    },
-    "./config": {
-      "types": "./dist/config.d.ts",
-      "default": "./dist/config.js"
-    }
+    "format:check": "prettier --check .",
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test"
   },
   "lint-staged": {
     "*.{ts,tsx,mjs}": [
@@ -62,8 +52,10 @@
     "lint-staged": "catalog:",
     "prettier": "catalog:",
     "tsx": "catalog:",
+    "turbo": "catalog:",
     "typescript": "catalog:",
     "typescript-eslint": "catalog:",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
+    "zod": "catalog:"
   }
 }

@@ -1,0 +1,7 @@
+{
+  "name": "@orderhub/tsconfig",
+  "private": true,
+  "files": [
+    "*.json"
+  ]
+}
