@@ -25,4 +25,26 @@ Use the [Conventional Commits 1.0.0 specification](https://www.conventionalcommi
 
 ### Commit additional rules
 
+- Header (the whole first line: type, scope, `!` and description) must not be longer than 100 characters
 - Body's lines must not be longer than 100 characters
+
+### Keeping within the length limits
+
+Do not estimate the length of a line by eye. Language models cannot count characters reliably,
+so a header that looks short can be over the limit. Instead:
+
+1. Write short headers on purpose. Aim for 90 characters or fewer, so a counting error still
+   stays under the 100-character limit. Put extra detail in the body, not the header.
+2. Wrap body lines at about 80 characters, for the same reason.
+3. Check the message with commitlint before running `git commit`, using the repository's own
+   configuration:
+
+   ```sh
+   printf '%s\n' "<the full commit message>" | pnpm exec commitlint
+   ```
+
+   If it reports `header-max-length` or `body-max-line-length`, shorten the message and run
+   the check again. Only commit once it exits with code 0.
+
+4. To get the exact length of a line, measure it with a tool, for example
+   `printf '%s' "<header>" | wc -m`.
