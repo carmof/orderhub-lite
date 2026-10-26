@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "tsc -p tsconfig.build.json"
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint ."
   },
   "exports": {
     ".": {
@@ -23,6 +25,7 @@
     "@orderhub/tsconfig": "workspace:*",
     "@types/node": "catalog:",
     "@typescript/native": "catalog:",
+    "eslint": "catalog:",
     "typescript": "catalog:"
   }
 }
