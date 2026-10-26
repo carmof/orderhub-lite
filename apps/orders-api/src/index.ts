@@ -1,3 +1,3 @@
-export const add = (a: number, b: number): number => {
-  return a + b;
-};
+import { CreateOrderInputSchema } from '@orderhub/contracts';
+
+CreateOrderInputSchema.safeParse({ a: 1 });
