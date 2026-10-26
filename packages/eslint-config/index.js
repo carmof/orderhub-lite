@@ -3,6 +3,13 @@ import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import prettier from 'eslint-config-prettier';
 
+/**
+ * Builds the shared ESLint flat config for Node packages.
+ *
+ * @param {string} tsconfigRootDir Absolute path of the package being linted,
+ *   usually `import.meta.dirname`.
+ * @returns {import('eslint').Linter.Config[]}
+ */
 export function nodeConfig(tsconfigRootDir) {
   return defineConfig(
     { ignores: ['dist', 'coverage'] },
