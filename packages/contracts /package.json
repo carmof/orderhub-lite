@@ -1,0 +1,28 @@
+{
+  "name": "@orderhub/contracts",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.js",
+      "default": "./dist/index.d.js"
+    }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@orderhub/eslint-config": "workspace:*",
+    "@orderhub/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
+    "@typescript/native": "catalog:",
+    "typescript": "catalog:"
+  }
+}
