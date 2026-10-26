@@ -2,6 +2,13 @@
 
 Agents working in this repository must follow the rules in this file.
 
+## General behavior
+
+Before making any code or configuration change, first explain to the user what
+will be changed and why. Present a concise plan, then ask for the user's
+explicit approval to proceed. Do not modify files until the user approves the
+plan.
+
 ## Commit messages
 
 Use the [Conventional Commits 1.0.0 specification](https://www.conventionalcommits.org/en/v1.0.0/) for all commit messages.
