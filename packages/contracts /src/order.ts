@@ -1,6 +1,13 @@
 import { z } from 'zod';
 
-export const OrderStatus = z.enum(['PENDING', 'RESERVED', 'PAID', 'SHIPPED', 'CANCELLED']);
+export const OrderStatus = z.enum([
+  'PENDING',
+  'RESERVED',
+  'PAID',
+  'SHIPPED',
+  'CANCELLED',
+  'CHANGE',
+]);
 
 const OrderItem = z.object({
   sku: z.string(),
