@@ -5,17 +5,14 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test:watch": "vitest run --watch",
-    "coverage": "vitest run --coverage",
-    "start": "node --enable-source-maps dist/index.js",
-    "prepare": "husky",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
-    "test": "turbo run test"
+    "test": "turbo run test",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare": "husky"
   },
   "lint-staged": {
     "*.{ts,tsx,mjs}": [
@@ -45,7 +42,6 @@
     "husky": "catalog:",
     "lint-staged": "catalog:",
     "prettier": "catalog:",
-    "tsx": "catalog:",
     "turbo": "catalog:"
   }
 }

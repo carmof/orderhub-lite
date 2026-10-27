@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "typecheck": "tsc --noEmit",
-    "lint": "eslint ."
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [],
   "author": "",
@@ -16,11 +15,11 @@
     "@orderhub/eslint-config": "workspace:*",
     "@orderhub/tsconfig": "workspace:*",
     "@types/node": "catalog:",
+    "@typescript/native": "catalog:",
     "eslint": "catalog:",
     "typescript": "catalog:"
   },
   "dependencies": {
-    "@orderhub/contracts": "workspace:*",
-    "@typescript/native": "catalog:"
+    "@orderhub/contracts": "workspace:*"
   }
 }

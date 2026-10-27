@@ -15,6 +15,10 @@
   "devDependencies": {
     "@orderhub/eslint-config": "workspace:*",
     "@orderhub/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
     "typescript": "catalog:"
+  },
+  "dependencies": {
+    "@typescript/native": "catalog:"
   }
 }
