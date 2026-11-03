@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "tsx watch src/index.ts",
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc",
     "lint": "eslint ."
@@ -17,6 +18,7 @@
     "@orderhub/tsconfig": "workspace:*",
     "@types/node": "catalog:",
     "@typescript/native": "catalog:",
+    "tsx": "catalog:",
     "typescript": "catalog:"
   }
 }
