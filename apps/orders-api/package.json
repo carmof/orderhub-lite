@@ -25,6 +25,7 @@
     "@vitest/coverage-v8": "catalog:",
     "eslint": "catalog:",
     "pino-pretty": "^13.2.0",
+    "tsx": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   },
