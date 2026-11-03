@@ -4,8 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "tsx watch src/index.ts",
     "build": "tsc -p tsconfig.build.json",
-    "typecheck": "tsc --noEmit"
+    "start": "node --enable-source-maps dist/index.js",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "keywords": [],
   "author": "",
@@ -16,10 +22,17 @@
     "@orderhub/tsconfig": "workspace:*",
     "@types/node": "catalog:",
     "@typescript/native": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
     "eslint": "catalog:",
-    "typescript": "catalog:"
+    "pino-pretty": "^13.2.0",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   },
   "dependencies": {
-    "@orderhub/contracts": "workspace:*"
+    "@orderhub/contracts": "workspace:*",
+    "close-with-grace": "^2.5.0",
+    "fastify": "^5.12.8",
+    "fastify-type-provider-zod": "^7.0.0",
+    "zod": "catalog:"
   }
 }

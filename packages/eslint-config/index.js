@@ -42,4 +42,4 @@ export function nodeConfig(tsconfigRootDir) {
       extends: [tseslint.configs.disableTypeChecked],
     },
   );
-};
+}
