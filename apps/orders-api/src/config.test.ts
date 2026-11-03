@@ -2,7 +2,7 @@ import { loadConfig, type Config } from './config.js';
 import { describe, test, expect } from 'vitest';
 
 describe('loadConfig', () => {
-  test('should load the configuration correctly', () => {
+  test('should load the configuration correctly with default values', () => {
     const expectedResult: Config = {
       DATABASE_URL: 'postgres://localhost/test',
       LOG_LEVEL: 'info',
