@@ -4,7 +4,7 @@ const Env = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   PORT: z.coerce.number().default(3000),
   DATABASE_URL: z.url(),
-  LOG_LEVEL: z.enum(['info']).default('info'),
+  LOG_LEVEL: z.enum(['info', 'debug']).default('info'),
 });
 
 export type Config = z.infer<typeof Env>;
