@@ -9,8 +9,8 @@
   },
   "exports": {
     ".": {
-      "types": "./dist/index.js",
-      "default": "./dist/index.d.js"
+      "types": "./dist/index.d.js",
+      "default": "./dist/index.js"
     }
   },
   "keywords": [],
