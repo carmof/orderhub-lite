@@ -1,6 +1,8 @@
 import Fastify from 'fastify';
 import { type Config } from './config.js';
 import { randomUUID } from 'node:crypto';
+import { validatorCompiler, serializerCompiler } from 'fastify-type-provider-zod';
+import { healthRoutes } from './modules/health/health.routes.js';
 
 const getLogger = (config: Config) => {
   return {
@@ -21,18 +23,15 @@ const getLogger = (config: Config) => {
 };
 
 export async function buildApp({ config }: { config: Config }) {
-  const fastify = Fastify({
+  const app = Fastify({
     logger: getLogger(config),
     genReqId: (req) => (req.headers['x-request-id'] as string | undefined) ?? randomUUID(),
   });
 
-  fastify.get('/health/live', function () {
-    return { status: 'ok' };
-  });
+  app.setValidatorCompiler(validatorCompiler);
+  app.setSerializerCompiler(serializerCompiler);
 
-  fastify.get('/health/ready', function () {
-    return { status: 'ok' };
-  });
+  app.register(healthRoutes, { prefix: '/health' });
 
-  return fastify;
+  return app;
 }
