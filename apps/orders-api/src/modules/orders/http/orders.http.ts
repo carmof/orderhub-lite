@@ -4,6 +4,6 @@ import { ordersRoutes } from './orders.routes.js';
 
 export function ordersHttpPlugin(deps: { orderRepository: OrderRepository }): FastifyPluginAsync {
   return async (app) => {
-    await app.register(ordersRoutes, deps);
+    await app.register(ordersRoutes, { ...deps, prefix: 'v1' });
   };
 }
