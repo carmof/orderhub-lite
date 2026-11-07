@@ -2,7 +2,7 @@ import Fastify from 'fastify';
 import { type Config } from './config.js';
 import { randomUUID } from 'node:crypto';
 import { validatorCompiler, serializerCompiler } from 'fastify-type-provider-zod';
-import { healthRoutes } from './modules/health/health.routes.js';
+import type { ServiceModule } from './shared/module.js';
 
 const getLogger = (config: Config) => {
   return {
@@ -21,17 +21,22 @@ const getLogger = (config: Config) => {
     : {}),
   };
 };
+export type AppDeps = { config: Config; modules: ServiceModule[] };
 
-export async function buildApp({ config }: { config: Config }) {
+export async function buildApp(deps: AppDeps) {
   const app = Fastify({
-    logger: getLogger(config),
+    logger: getLogger(deps.config),
     genReqId: (req) => (req.headers['x-request-id'] as string | undefined) ?? randomUUID(),
   });
 
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
 
-  app.register(healthRoutes, { prefix: '/health' });
+  for (const m of deps.modules) {
+    if (m.httpPlugin) {
+      await app.register(m.httpPlugin);
+    }
+  }
 
   return app;
 }
