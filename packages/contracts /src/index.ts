@@ -1,2 +1,9 @@
-export { CreateOrderInputSchema, OrderStatus, type CreateOrderInput } from './order.js';
+export {
+  CreateOrderInputSchema,
+  OrderStatusSchema,
+  OrderDtoSchema,
+  type OrderStatus,
+  type CreateOrderInput,
+  type OrderDto,
+} from './order.js';
 export { type HelthCheckResponse, HelthCheckResponseSchema } from './health.js';
