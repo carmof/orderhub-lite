@@ -19,13 +19,14 @@ Every service in this monorepo uses this layout:
       entrypoints/     one file per process (api.ts, later relay.ts, consumer.ts)
       modules/<name>/
         index.ts       the module's public API
+        <name>.module.ts  module composition root: create<Name>Module(), returns a ServiceModule
         domain/        pure business rules
         application/   use cases + ports (interfaces)
         infra/         adapters: Prisma repositories, HTTP clients
         http/          Fastify routes
         graphql/       (later) GraphQL types for this module
-      shared/          generic code that knows no module (errors, problem+json, db client)
-      composition.ts   composition root: creates Prisma, repositories, clients, use cases
+      shared/          generic code that knows no module (errors, problem+json, db client, module.ts with the ServiceModule contract)
+      composition.ts   service composition root: builds shared infra, calls each module factory
       app.ts           builds Fastify only; receives ready dependencies
       config.ts        env validated with zod
     test/              integration tests, fakes/, factories/
@@ -38,7 +39,13 @@ Dependency rules:
 4. A module uses another module only through its `index.ts`.
 5. `shared/` never imports from `modules/`.
 
-Only `composition.ts` instantiates infrastructure.
+6. Each module composes itself in `<name>.module.ts`; `composition.ts` only builds shared
+   infrastructure and calls the module factories in dependency order. `app.ts` names no module.
+7. Between modules, events are the default; a module's `api` is only for synchronous queries.
+   A module never imports its own `index.ts`.
+
+Limit: up to ~15 modules, explicit wiring in `composition.ts`. Beyond that, split the service
+or adopt a DI container (NestJS modules, awilix). This ADR must be revisited at that point.
 
 ## Consequences
 
