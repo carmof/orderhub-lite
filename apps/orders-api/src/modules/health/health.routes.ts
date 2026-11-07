@@ -1,23 +1,14 @@
-import type { FastifyPluginCallbackZod, ZodTypeProvider } from 'fastify-type-provider-zod';
-import { HelthCheckResponseSchema, type HelthCheckResponse } from '@orderhub/contracts';
+import type { FastifyPluginCallbackZod } from 'fastify-type-provider-zod';
+import { HelthCheckResponseSchema } from '@orderhub/contracts';
 
-export const healthRoutes: FastifyPluginCallbackZod = (app, _, done) => {
-  app.withTypeProvider<ZodTypeProvider>();
+export const healthRoutesPlugin: FastifyPluginCallbackZod = function (app, _opts, done) {
+  app.get('/live', { schema: { response: { '2xx': HelthCheckResponseSchema } } }, function () {
+    return { status: 'ok' };
+  });
 
-  app.get(
-    '/live',
-    { schema: { response: { '2xx': HelthCheckResponseSchema } } },
-    function (): HelthCheckResponse {
-      return { status: 'ok' };
-    },
-  );
+  app.get('/ready', { schema: { response: { '2xx': HelthCheckResponseSchema } } }, function () {
+    return { status: 'ok' };
+  });
 
-  app.get(
-    '/ready',
-    { schema: { response: { '2xx': HelthCheckResponseSchema } } },
-    function (): HelthCheckResponse {
-      return { status: 'ok' };
-    },
-  );
   done();
 };
