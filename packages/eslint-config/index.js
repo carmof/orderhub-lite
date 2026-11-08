@@ -2,6 +2,7 @@ import { defineConfig } from 'eslint/config';
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import prettier from 'eslint-config-prettier';
+import eslintPluginSecurity from 'eslint-plugin-security';
 
 /**
  * Builds the shared ESLint flat config for Node packages.
@@ -14,6 +15,7 @@ export function nodeConfig(tsconfigRootDir) {
   return defineConfig(
     { ignores: ['dist', 'coverage'] },
     js.configs.recommended,
+    eslintPluginSecurity.configs.recommended,
     tseslint.configs.strictTypeChecked,
     {
       // languageOptions: how ESLint should read the code in the files it matches
@@ -35,6 +37,7 @@ export function nodeConfig(tsconfigRootDir) {
       rules: {
         '@typescript-eslint/switch-exhaustiveness-check': 'error',
         '@typescript-eslint/consistent-type-imports': 'error',
+        'security/detect-object-injection': 'off',
       },
     },
     {
