@@ -7,17 +7,23 @@ import { problem } from './problem.js';
 export const registerErrorHandlerPlugin: FastifyPluginCallback = (app, _opts, done) => {
   app.setErrorHandler(function (error, request, reply) {
     if (hasZodFastifySchemaValidationErrors(error)) {
-      problem(reply, 400, 'Schema Validation Error', error.name, { details: error.validation });
+      problem(
+        reply,
+        400,
+        'Request Not Valid Error',
+        'Some field of the request is not correct or missing',
+        { details: error.validation },
+      );
       return reply;
     }
 
     if (error instanceof NotFoundError) {
-      problem(reply, 404, error.name, error.message);
+      problem(reply, 404, 'Not Found Error', error.message);
       return reply;
     }
 
     if (error instanceof ConflictError) {
-      problem(reply, 409, error.name, error.message);
+      problem(reply, 409, 'Conflit Error', error.message);
       return reply;
     }
 
@@ -27,7 +33,7 @@ export const registerErrorHandlerPlugin: FastifyPluginCallback = (app, _opts, do
       }
     }
 
-    request.log.error({ error }, 'erro não tratado');
+    request.log.error({ error }, 'not treated error');
     problem(reply, 500, 'Internal Server Error');
     return reply;
   });
