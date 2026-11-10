@@ -30,7 +30,7 @@ export class InMemoryOrderRepository implements OrderRepository {
       order,
     });
 
-    this.memoryByTenant.set(orderId, (this.memoryByTenant.get(tenantId) || []).concat([order]));
+    this.memoryByTenant.set(tenantId, (this.memoryByTenant.get(tenantId) || []).concat([order]));
 
     return Promise.resolve(order);
   }
@@ -53,16 +53,19 @@ export class InMemoryOrderRepository implements OrderRepository {
   ): Promise<{ items: OrderDto[]; nextCursor: string | null }> {
     const orders = this.memoryByTenant.get(tenantId) ?? [];
     let i = 0;
-    do {
+    while (query.cursor && orders[i]?.id !== query.cursor && i < orders.length) {
       i++;
-    } while (orders[i]?.id !== query.cursor && i < orders.length);
+    }
+    console.log({ i });
     const items: OrderDto[] = [];
     let nextCursor: string | null = null;
     for (i; i < orders.length && items.length <= query.limit; i++) {
       const order = orders[i];
-      if (order && order.status === query.status) {
-        items.push(order);
-        nextCursor = order.id;
+      if (order) {
+        if (query.status === undefined || order.status === query.status) {
+          items.push(order);
+          nextCursor = order.id;
+        }
       }
     }
     return Promise.resolve({ items, nextCursor });

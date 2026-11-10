@@ -4,7 +4,7 @@ import { randomUUID } from 'node:crypto';
 import { validatorCompiler, serializerCompiler } from 'fastify-type-provider-zod';
 import type { ServiceModule } from './shared/module.js';
 import { registerErrorHandlerPlugin } from './shared/http/error-handler.js';
-import { problem } from './shared/http/problem.js';
+import FP from 'fastify-plugin';
 
 const getLogger = (config: Config) => {
   return {
@@ -34,16 +34,13 @@ export async function buildApp(deps: AppDeps) {
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
 
+  app.register(FP(registerErrorHandlerPlugin));
+
   for (const m of deps.modules) {
     if (m.httpPlugin) {
       await app.register(m.httpPlugin);
     }
   }
-
-  app.register(registerErrorHandlerPlugin);
-  app.setNotFoundHandler(function (_request, reply) {
-    problem(reply, 404, 'Resource not found');
-  });
 
   return app;
 }
