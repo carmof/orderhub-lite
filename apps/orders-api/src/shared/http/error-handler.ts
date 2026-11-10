@@ -1,9 +1,9 @@
-import { type FastifyPluginAsync } from 'fastify';
+import { type FastifyPluginCallback } from 'fastify';
 import { FastifyError } from '@fastify/error';
 import { hasZodFastifySchemaValidationErrors } from 'fastify-type-provider-zod';
 import { ConflictError, NotFoundError } from '../errors.js';
 
-export const registerErrorHandlerPlugin: FastifyPluginAsync = async (app) => {
+export const registerErrorHandlerPlugin: FastifyPluginCallback = (app, _opts, done) => {
   app.setErrorHandler(function (error, request, reply) {
     if (hasZodFastifySchemaValidationErrors(error)) {
       return reply.status(400).send({
@@ -29,5 +29,5 @@ export const registerErrorHandlerPlugin: FastifyPluginAsync = async (app) => {
     return reply.status(500);
   });
 
-  await Promise.resolve();
+  done();
 };
