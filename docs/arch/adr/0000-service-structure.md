@@ -1,4 +1,4 @@
-# 0000. Service structure
+# ADR 0000: API Module Structure
 
 - Status: Accepted
 - Date: 2026-11-04
