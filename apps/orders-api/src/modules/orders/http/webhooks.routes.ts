@@ -74,6 +74,7 @@ export const OrdersWebhookRoutes: FastifyPluginCallbackZod<{
       try {
         const order = await orderRepository.create(tenantId, req.body);
         memory.set(memoryKey, { fingerprint, state: 'done', body: order, status: 201 });
+
         return await reply.status(201).send(order);
       } catch (err) {
         memory.delete(idempotencyKey);
