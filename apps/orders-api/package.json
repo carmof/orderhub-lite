@@ -23,8 +23,10 @@
     "@types/node": "catalog:",
     "@typescript/native": "catalog:",
     "@vitest/coverage-v8": "catalog:",
+    "dotenv": "catalog:",
     "eslint": "catalog:",
     "pino-pretty": "catalog:",
+    "prisma": "catalog:",
     "tsx": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
@@ -32,6 +34,8 @@
   "dependencies": {
     "@fastify/error": "catalog:",
     "@orderhub/contracts": "workspace:*",
+    "@prisma/adapter-pg": "catalog:",
+    "@prisma/client": "catalog:",
     "close-with-grace": "catalog:",
     "fastify": "catalog:",
     "fastify-plugin": "catalog:",
