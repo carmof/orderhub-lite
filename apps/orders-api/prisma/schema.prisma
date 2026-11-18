@@ -11,3 +11,62 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum IdempotencyState {
+  IN_PROGRESS
+  DONE
+}
+
+enum OrderStatus {
+  PENDING
+  RESERVED
+  PAID
+  SHIPPED
+  CANCELLED
+}
+
+enum Currency {
+  BRL
+}
+
+model Order {
+  id         String      @id @default(uuid()) @db.Uuid
+  tenantId   String      @map("tenant_id") @db.Uuid
+  channel    String
+  externalId String      @map("external_id")
+  status     OrderStatus @default(PENDING)
+  totalCents Int         @map("total_cents")
+  currency   String      @db.Char(3)
+  version    Int         @default(0)
+  item       OrderItem[]
+  createdAt  DateTime    @default(now()) @map("created_at")
+
+  @@unique([tenantId, channel, externalId])
+  @@index([tenantId, status, createdAt(sort: Desc)])
+  @@map("orders")
+}
+
+model OrderItem {
+  id             Int    @id @default(autoincrement())
+  order          Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId        String @map("order_id") @db.Uuid
+  sku            String
+  quantity       Int
+  unitPriceCents Int    @map("unit_price_cents")
+
+  @@index([orderId])
+  @@map("order_items")
+}
+
+model IdempotencyKey {
+  tenantId       String           @db.Uuid
+  key            String
+  requestHash    String           @map("request_hash")
+  state          IdempotencyState
+  responseStatus Int?             @map("response_status")
+  responseBody   Json?            @map("response_body")
+  createdAt      DateTime         @default(now()) @map("created_at")
+
+  @@id([tenantId, key])
+  @@map("idempotency_keys")
+}
