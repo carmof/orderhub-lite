@@ -8,5 +8,8 @@
     {
       "file": "AGENTS.md"
     }
-  ]
+  ],
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  }
 }
