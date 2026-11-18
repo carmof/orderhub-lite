@@ -13,7 +13,7 @@ import eslintPluginSecurity from 'eslint-plugin-security';
  */
 export function nodeConfig(tsconfigRootDir) {
   return defineConfig(
-    { ignores: ['dist', 'coverage'] },
+    { ignores: ['dist', 'coverage', '**/generated'] },
     js.configs.recommended,
     eslintPluginSecurity.configs.recommended,
     tseslint.configs.strictTypeChecked,
