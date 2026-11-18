@@ -47,7 +47,7 @@ export const OrdersWebhookRoutes: FastifyPluginCallbackZod<{
       const tenantId = req.headers['x-tenant-id'];
       const idempotencyKey = req.headers['idempotency-key'];
       const fingerprint = generateFingerprint(req);
-      const memoryKey = `${tenantId}:idempotencyKey`;
+      const memoryKey = `${tenantId}:${idempotencyKey}`;
 
       const idempotencyRegister = memory.get(memoryKey);
 
