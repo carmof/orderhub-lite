@@ -13,7 +13,10 @@ export class InMemoryOrderRepository implements OrderRepository {
 
   create(tenantId: string, input: CreateOrderInput): Promise<OrderDto> {
     const orderId = randomUUID();
-    const totalCents = input.items.reduce((acc, item) => acc + item.unitPriceCents, 0);
+    const totalCents = input.items.reduce(
+      (acc, item) => acc + item.quantity * item.unitPriceCents,
+      0,
+    );
     const order: OrderDto = {
       channel: input.channel,
       createdAt: new Date().toISOString(),
