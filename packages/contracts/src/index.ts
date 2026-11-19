@@ -2,6 +2,7 @@ export {
   CreateOrderInputSchema,
   OrderStatusSchema,
   OrderDtoSchema,
+  OrderCurrencySchema,
   type OrderStatus,
   type CreateOrderInput,
   type OrderDto,
