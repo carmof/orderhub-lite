@@ -38,7 +38,7 @@ model Order {
   totalCents Int         @map("total_cents")
   currency   String      @db.Char(3)
   version    Int         @default(0)
-  item       OrderItem[]
+  items      OrderItem[]
   createdAt  DateTime    @default(now()) @map("created_at")
 
   @@unique([tenantId, channel, externalId])
