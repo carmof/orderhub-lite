@@ -6,16 +6,18 @@ export type OrderStatus = z.infer<typeof OrderStatusSchema>;
 export const OrderCurrencySchema = z.enum(['BRL']);
 export type OrderCurrency = z.infer<typeof OrderCurrencySchema>;
 
-const OrderItem = z.object({
+const OrderItemSchema = z.object({
   sku: z.string(),
   quantity: z.int().min(1),
   unitPriceCents: z.int().min(0),
 });
 
+export type OrderItem = z.infer<typeof OrderItemSchema>;
+
 export const CreateOrderInputSchema = z.object({
   externalId: z.string(),
   channel: z.string(),
-  items: z.array(OrderItem).min(1),
+  items: z.array(OrderItemSchema).min(1),
   currency: OrderCurrencySchema,
 });
 
@@ -26,7 +28,7 @@ export const OrderDtoSchema = z.object({
   channel: z.string().min(1),
   externalId: z.string().min(1),
   status: OrderStatusSchema,
-  items: z.array(OrderItem).min(1),
+  items: z.array(OrderItemSchema).min(1),
   totalCents: z.number(),
   currency: OrderCurrencySchema,
   version: z.number(),
