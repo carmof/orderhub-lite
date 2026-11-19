@@ -1,7 +1,7 @@
 import closeWithGrace from 'close-with-grace';
 import { buildApp } from '../app.js';
-import { loadConfig } from '../config.js';
 import { buildDeps } from '../composition.js';
+import { loadConfig } from '../config.js';
 
 const config = loadConfig();
 const deps = buildDeps(config);

@@ -1,6 +1,6 @@
 import { type OrderItem } from '@orderhub/contracts';
-import { orderTotalCents } from './order-total.js';
 import { describe, expect, it, test } from 'vitest';
+import { orderTotalCents } from './order-total.js';
 
 const generateMockItems = (dataArr: Partial<OrderItem>[]): OrderItem[] => {
   return dataArr.map((data, index) => {

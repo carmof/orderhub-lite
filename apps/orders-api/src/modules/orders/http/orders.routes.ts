@@ -1,8 +1,8 @@
 import { CreateOrderInputSchema, OrderDtoSchema, OrderStatusSchema } from '@orderhub/contracts';
-import type { OrderRepository } from '../application/ports.js';
 import type { FastifyPluginCallbackZod, ZodTypeProvider } from 'fastify-type-provider-zod';
 import { z } from 'zod';
 import { NotFoundError } from '../../../shared/errors.js';
+import type { OrderRepository } from '../application/ports.js';
 
 const TenantHeaders = z.object({ 'x-tenant-id': z.uuid() });
 

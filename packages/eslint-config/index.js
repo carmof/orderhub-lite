@@ -1,8 +1,8 @@
-import { defineConfig } from 'eslint/config';
 import js from '@eslint/js';
-import tseslint from 'typescript-eslint';
 import prettier from 'eslint-config-prettier';
 import eslintPluginSecurity from 'eslint-plugin-security';
+import { defineConfig } from 'eslint/config';
+import tseslint from 'typescript-eslint';
 
 /**
  * Builds the shared ESLint flat config for Node packages.

@@ -1,5 +1,5 @@
+import { describe, expect, test } from 'vitest';
 import { loadConfig, type Config } from './config.js';
-import { describe, test, expect } from 'vitest';
 
 describe('loadConfig', () => {
   test('should load the configuration correctly with default values', () => {

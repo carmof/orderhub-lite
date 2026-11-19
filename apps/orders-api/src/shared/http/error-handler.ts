@@ -1,5 +1,5 @@
-import { type FastifyPluginCallback } from 'fastify';
 import { FastifyError } from '@fastify/error';
+import { type FastifyPluginCallback } from 'fastify';
 import { hasZodFastifySchemaValidationErrors } from 'fastify-type-provider-zod';
 import { ConflictError, NotFoundError } from '../errors.js';
 import { problem } from './problem.js';

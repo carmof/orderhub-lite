@@ -1,10 +1,10 @@
-import Fastify from 'fastify';
-import { type Config } from './config.js';
 import { randomUUID } from 'node:crypto';
-import { validatorCompiler, serializerCompiler } from 'fastify-type-provider-zod';
-import type { ServiceModule } from './shared/module.js';
-import { registerErrorHandlerPlugin } from './shared/http/error-handler.js';
+import Fastify from 'fastify';
 import FP from 'fastify-plugin';
+import { serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod';
+import { type Config } from './config.js';
+import { registerErrorHandlerPlugin } from './shared/http/error-handler.js';
+import type { ServiceModule } from './shared/module.js';
 
 const getLogger = (config: Config) => {
   return {

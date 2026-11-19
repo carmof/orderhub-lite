@@ -1,6 +1,6 @@
+import { randomUUID } from 'node:crypto';
 import type { CreateOrderInput, OrderDto, OrderStatus } from '@orderhub/contracts';
 import type { OrderRepository } from '../application/ports.js';
-import { randomUUID } from 'node:crypto';
 
 export class InMemoryOrderRepository implements OrderRepository {
   private memoryById: Map<string, { tenantId: string; order: OrderDto }>;

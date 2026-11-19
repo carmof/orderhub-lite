@@ -14,6 +14,9 @@
     "coverage": "vitest run --coverage",
     "db:generate": "prisma generate"
   },
+  "imports": {
+    "#src/*": "./src/*"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

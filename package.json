@@ -38,6 +38,7 @@
   "devDependencies": {
     "@commitlint/cli": "catalog:",
     "@commitlint/config-conventional": "catalog:",
+    "@ianvs/prettier-plugin-sort-imports": "^4.7.1",
     "eslint": "catalog:",
     "husky": "catalog:",
     "lint-staged": "catalog:",

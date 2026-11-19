@@ -1,10 +1,10 @@
 import { createHash } from 'crypto';
+import { CreateOrderInputSchema, OrderDtoSchema } from '@orderhub/contracts';
+import { type FastifyRequest } from 'fastify';
 import type { FastifyPluginCallbackZod, ZodTypeProvider } from 'fastify-type-provider-zod';
 import z from 'zod';
-import { type FastifyRequest } from 'fastify';
-import type { OrderRepository } from '../application/ports.js';
-import { CreateOrderInputSchema, OrderDtoSchema } from '@orderhub/contracts';
 import { problem } from '../../../shared/http/problem.js';
+import type { OrderRepository } from '../application/ports.js';
 
 const HEADERS_SCHEMA = z.object({
   'x-tenant-id': z.uuid(),
