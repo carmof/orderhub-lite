@@ -1,9 +1,8 @@
 import { randomUUID } from 'node:crypto';
 import Fastify from 'fastify';
-import FP from 'fastify-plugin';
 import { serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod';
 import { type Config } from './config.js';
-import { registerErrorHandlerPlugin } from './shared/http/error-handler.js';
+import { registerErrorHandler } from './shared/http/error-handler.js';
 import type { ServiceModule } from './shared/module.js';
 
 const getLogger = (config: Config) => {
@@ -34,7 +33,7 @@ export async function buildApp(deps: AppDeps) {
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
 
-  app.register(FP(registerErrorHandlerPlugin));
+  registerErrorHandler(app);
 
   for (const m of deps.modules) {
     if (m.httpPlugin) {

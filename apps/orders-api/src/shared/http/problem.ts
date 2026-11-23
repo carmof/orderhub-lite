@@ -16,7 +16,7 @@ export function problem(
   detail?: string,
   extra?: Record<string, unknown>,
 ) {
-  reply
+  return reply
     .code(status)
     .type('application/problem+json')
     .send({ type: 'about:blank', title, status, detail, instance: reply.request.url, ...extra });
