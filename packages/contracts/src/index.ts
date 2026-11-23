@@ -7,5 +7,6 @@ export {
   type CreateOrderInput,
   type OrderDto,
   type OrderItem,
+  type OrderCurrency,
 } from './order.js';
 export { type HelthCheckResponse, HelthCheckResponseSchema } from './health.js';

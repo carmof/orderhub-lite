@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import type { OrderStatus } from '@orderhub/contracts';
+import type { OrderCurrency, OrderStatus } from '@orderhub/contracts';
 import { orderTotalCents } from './order-total.js';
 
 /**
@@ -59,7 +59,7 @@ export type Order = {
   readonly status: OrderStatus;
   readonly items: readonly OrderItem[];
   readonly totalCents: number;
-  readonly currency: string;
+  readonly currency: OrderCurrency;
   readonly version: number;
   readonly createdAt: Date;
 };
@@ -68,7 +68,7 @@ export type PlaceOrderInput = {
   tenantId: string;
   channel: string;
   externalId: string;
-  currency: string;
+  currency: OrderCurrency;
   items: OrderItem[];
 };
 
