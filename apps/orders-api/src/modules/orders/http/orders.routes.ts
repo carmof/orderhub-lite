@@ -2,18 +2,18 @@ import { CreateOrderInputSchema, OrderDtoSchema, OrderStatusSchema } from '@orde
 import type { FastifyPluginCallbackZod, ZodTypeProvider } from 'fastify-type-provider-zod';
 import { z } from 'zod';
 import { NotFoundError } from '../../../shared/errors.js';
-import type { OrderRepository } from '../application/ports.js';
+import type { CreateOrder } from '../application/create-order.js';
+import type { OrderReads } from '../application/ports.js';
 
 const TenantHeaders = z.object({ 'x-tenant-id': z.uuid() });
 
 export const ordersRoutes: FastifyPluginCallbackZod<{
-  orderRepository: OrderRepository;
+  createOrder: CreateOrder;
+  orderReads: OrderReads;
 }> = function (app, opts, done) {
-  const { orderRepository } = opts;
+  const appTyped = app.withTypeProvider<ZodTypeProvider>();
 
-  const appType = app.withTypeProvider<ZodTypeProvider>();
-
-  appType.post(
+  appTyped.post(
     '/orders',
     {
       schema: {
@@ -24,13 +24,16 @@ export const ordersRoutes: FastifyPluginCallbackZod<{
     },
     async (req, reply) => {
       const tenantId = req.headers['x-tenant-id'];
-      const createdOrderDto = await orderRepository.create(tenantId, req.body);
+      const createdOrder = await opts.createOrder(tenantId, req.body);
 
-      return reply.code(201).send(createdOrderDto);
+      return reply
+        .code(201)
+        .header('location', `${appTyped.prefix}/orders/${createdOrder.id}}`)
+        .send(createdOrder);
     },
   );
 
-  appType.get(
+  appTyped.get(
     '/orders/:id',
     {
       schema: {
@@ -42,7 +45,7 @@ export const ordersRoutes: FastifyPluginCallbackZod<{
     async (req, reply) => {
       const tenantId = req.headers['x-tenant-id'];
       const orderId = req.params.id;
-      const findOrderResponse = await orderRepository.findById(tenantId, orderId);
+      const findOrderResponse = await opts.orderReads.findById(tenantId, orderId);
 
       if (!findOrderResponse) {
         throw new NotFoundError();
@@ -52,7 +55,7 @@ export const ordersRoutes: FastifyPluginCallbackZod<{
     },
   );
 
-  appType.get(
+  appTyped.get(
     '/orders',
     {
       schema: {
@@ -70,7 +73,7 @@ export const ordersRoutes: FastifyPluginCallbackZod<{
     async (req, reply) => {
       const tenantId = req.headers['x-tenant-id'];
       const { status, limit, cursor } = req.query;
-      const orderListResponse = await orderRepository.list(tenantId, {
+      const orderListResponse = await opts.orderReads.list(tenantId, {
         limit,
         ...(status !== undefined ? { status } : {}),
         ...(cursor !== undefined ? { cursor } : {}),

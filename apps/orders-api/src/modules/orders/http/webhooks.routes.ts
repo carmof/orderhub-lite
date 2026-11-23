@@ -4,7 +4,8 @@ import { type FastifyRequest } from 'fastify';
 import type { FastifyPluginCallbackZod, ZodTypeProvider } from 'fastify-type-provider-zod';
 import z from 'zod';
 import { problem } from '../../../shared/http/problem.js';
-import type { OrderRepository } from '../application/ports.js';
+import type { CreateOrder } from '../application/create-order.js';
+import type { OrderReads } from '../application/ports.js';
 
 const HEADERS_SCHEMA = z.object({
   'x-tenant-id': z.uuid(),
@@ -28,12 +29,12 @@ const memory = new Map<
 >();
 
 export const OrdersWebhookRoutes: FastifyPluginCallbackZod<{
-  orderRepository: OrderRepository;
+  createOrder: CreateOrder;
+  orderReads: OrderReads;
 }> = function (app, opts) {
-  const { orderRepository } = opts;
-  const appType = app.withTypeProvider<ZodTypeProvider>();
+  const appTyped = app.withTypeProvider<ZodTypeProvider>();
 
-  appType.post(
+  appTyped.post(
     '/webhooks/:channel/orders',
     {
       schema: {
@@ -72,7 +73,7 @@ export const OrdersWebhookRoutes: FastifyPluginCallbackZod<{
       memory.set(memoryKey, { fingerprint, state: 'in_progress' });
 
       try {
-        const order = await orderRepository.create(tenantId, req.body);
+        const order = await opts.createOrder(tenantId, req.body);
         memory.set(memoryKey, { fingerprint, state: 'done', body: order, status: 201 });
 
         return await reply.status(201).send(order);

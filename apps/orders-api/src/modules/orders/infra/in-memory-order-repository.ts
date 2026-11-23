@@ -1,41 +1,25 @@
-import { randomUUID } from 'node:crypto';
-import type { CreateOrderInput, OrderDto, OrderStatus } from '@orderhub/contracts';
+import type { OrderDto, OrderStatus } from '@orderhub/contracts';
+import { toOrderDto } from '../application/order-dto.js';
 import type { OrderRepository } from '../application/ports.js';
+import type { Order } from '../domain/order.js';
 
 export class InMemoryOrderRepository implements OrderRepository {
-  private memoryById: Map<string, { tenantId: string; order: OrderDto }>;
-  private memoryByTenant: Map<string, OrderDto[]>;
+  private memoryById: Map<string, Order>;
+  private memoryByTenant: Map<string, Order[]>;
 
   constructor() {
     this.memoryById = new Map();
     this.memoryByTenant = new Map();
   }
 
-  create(tenantId: string, input: CreateOrderInput): Promise<OrderDto> {
-    const orderId = randomUUID();
-    const totalCents = input.items.reduce(
-      (acc, item) => acc + item.quantity * item.unitPriceCents,
-      0,
+  add(order: Order): Promise<void> {
+    this.memoryById.set(order.id, order);
+
+    this.memoryByTenant.set(
+      order.tenantId,
+      (this.memoryByTenant.get(order.tenantId) || []).concat([order]),
     );
-    const order: OrderDto = {
-      channel: input.channel,
-      createdAt: new Date().toISOString(),
-      currency: 'BRL',
-      externalId: input.externalId,
-      id: orderId,
-      items: input.items,
-      status: 'PENDING',
-      totalCents,
-      version: 0,
-    };
-    this.memoryById.set(orderId, {
-      tenantId,
-      order,
-    });
-
-    this.memoryByTenant.set(tenantId, (this.memoryByTenant.get(tenantId) || []).concat([order]));
-
-    return Promise.resolve(order);
+    return Promise.resolve();
   }
 
   findById(tenantId: string, id: string): Promise<OrderDto | null> {
@@ -47,7 +31,7 @@ export class InMemoryOrderRepository implements OrderRepository {
       return Promise.resolve(null);
     }
 
-    return Promise.resolve(register.order);
+    return Promise.resolve(toOrderDto(register));
   }
 
   list(
@@ -59,14 +43,13 @@ export class InMemoryOrderRepository implements OrderRepository {
     while (query.cursor && orders[i]?.id !== query.cursor && i < orders.length) {
       i++;
     }
-    console.log({ i });
     const items: OrderDto[] = [];
     let nextCursor: string | null = null;
     for (i; i < orders.length && items.length <= query.limit; i++) {
       const order = orders[i];
       if (order) {
         if (query.status === undefined || order.status === query.status) {
-          items.push(order);
+          items.push(toOrderDto(order));
           nextCursor = order.id;
         }
       }
