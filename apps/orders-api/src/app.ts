@@ -22,7 +22,13 @@ const getLogger = (config: Config) => {
     : {}),
   };
 };
-export type AppDeps = { config: Config; modules: ServiceModule[] };
+
+export type AppDeps = {
+  config: Config;
+  modules: ServiceModule[];
+  readiness: () => Promise<void>;
+  dispose: () => Promise<void>;
+};
 
 export async function buildApp(deps: AppDeps) {
   const app = Fastify({
