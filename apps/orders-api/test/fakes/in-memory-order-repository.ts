@@ -1,7 +1,7 @@
 import type { OrderDto, OrderStatus } from '@orderhub/contracts';
-import { toOrderDto } from '../application/order-dto.js';
-import type { OrderRepository } from '../application/ports.js';
-import type { Order } from '../domain/order.js';
+import { toOrderDto } from '#src/modules/orders/application/order-dto.js';
+import type { OrderRepository } from '#src/modules/orders/application/ports.js';
+import type { Order } from '#src/modules/orders/domain/order.js';
 
 export class InMemoryOrderRepository implements OrderRepository {
   private memoryById: Map<string, Order>;
