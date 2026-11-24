@@ -22,5 +22,15 @@ export function buildDeps(config: Config): AppDeps {
   const orders = createOrdersModule({ infra });
   const modules: ServiceModule[] = [orders];
 
-  return { config, modules, dispose: infra.dispose, readiness: infra.readiness };
+  return {
+    config,
+    modules,
+    dispose: async () => {
+      for (const m of [...modules].reverse()) await m.close?.();
+      await infra.dispose();
+    },
+    readiness: async () => {
+      await infra.readiness();
+    },
+  };
 }

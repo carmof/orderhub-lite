@@ -11,6 +11,7 @@ closeWithGrace({ delay: 10_000 }, async ({ signal, err }) => {
   if (err) app.log.error({ err }, 'fatal error');
   app.log.info({ signal }, 'shutting down');
   await app.close();
+  await deps.dispose();
 });
 
 await app.listen({ host: '0.0.0.0', port: config.PORT });
