@@ -4,8 +4,9 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider        = "prisma-client"
+  output          = "../src/generated/prisma"
+  previewFeatures = ["typedSql"]
 }
 
 datasource db {
@@ -13,20 +14,26 @@ datasource db {
 }
 
 enum IdempotencyState {
-  IN_PROGRESS
-  DONE
+  IN_PROGRESS @map("in_progress")
+  DONE        @map("done")
+
+  @@map("idempotency_state")
 }
 
 enum OrderStatus {
-  PENDING
-  RESERVED
-  PAID
-  SHIPPED
-  CANCELLED
+  PENDING   @map("pending")
+  RESERVED  @map("reserved")
+  PAID      @map("paid")
+  SHIPPED   @map("shipped")
+  CANCELLED @map("cancelled")
+
+  @@map("order_status")
 }
 
 enum Currency {
-  BRL
+  BRL @map("brl")
+
+  @@map("currency")
 }
 
 model Order {
@@ -59,7 +66,7 @@ model OrderItem {
 }
 
 model IdempotencyKey {
-  tenantId       String           @db.Uuid
+  tenantId       String           @map("tenant_id") @db.Uuid
   key            String
   requestHash    String           @map("request_hash")
   state          IdempotencyState
