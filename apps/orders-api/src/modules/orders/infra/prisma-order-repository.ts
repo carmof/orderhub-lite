@@ -1,5 +1,5 @@
 import { type OrderDto, type OrderStatus } from '@orderhub/contracts';
-import { type Prisma, type PrismaClient } from '#src/generated/prisma/client.js';
+import { type Prisma } from '#src/generated/prisma/client.js';
 import type { OrderRepository } from '../application/ports.js';
 import { type Order } from '../domain/order.js';
 
@@ -18,7 +18,7 @@ const mapDbOrderToDto = (dbOrder: DbOrderWithItems): OrderDto => ({
 });
 
 export class PrismaOrderRepository implements OrderRepository {
-  constructor(private readonly db: PrismaClient) {}
+  constructor(private readonly db: Prisma.TransactionClient) {}
 
   async add(input: Order): Promise<void> {
     await this.db.order.create({
