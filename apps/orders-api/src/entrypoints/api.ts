@@ -8,7 +8,9 @@ const deps = buildDeps(config);
 const app = await buildApp(deps);
 
 closeWithGrace({ delay: 10_000 }, async ({ signal, err }) => {
-  if (err) app.log.error({ err }, 'fatal error');
+  if (err) {
+    app.log.error({ err }, 'fatal error');
+  }
   app.log.info({ signal }, 'shutting down');
   await app.close();
   await deps.dispose();
