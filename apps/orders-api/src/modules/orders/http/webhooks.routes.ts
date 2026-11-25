@@ -1,11 +1,10 @@
 import { createHash } from 'crypto';
 import { CreateOrderInputSchema, OrderDtoSchema } from '@orderhub/contracts';
+import { problem } from '#src/shared/http/problem.js';
 import { type FastifyRequest } from 'fastify';
 import type { FastifyPluginCallbackZod, ZodTypeProvider } from 'fastify-type-provider-zod';
 import z from 'zod';
-import { problem } from '../../../shared/http/problem.js';
-import type { CreateOrder } from '../application/create-order.js';
-import type { OrderReads } from '../application/ports.js';
+import type { ReceiveChannelOrder } from '../application/receive-channel-order.js';
 
 const HEADERS_SCHEMA = z.object({
   'x-tenant-id': z.uuid(),
@@ -18,19 +17,8 @@ const generateFingerprint = (request: FastifyRequest) => {
 
 type OrderDto = z.infer<typeof OrderDtoSchema>;
 
-const memory = new Map<
-  string,
-  {
-    fingerprint: string;
-    state: 'in_progress' | 'done';
-    status?: 201;
-    body?: OrderDto;
-  }
->();
-
 export const OrdersWebhookRoutes: FastifyPluginCallbackZod<{
-  createOrder: CreateOrder;
-  orderReads: OrderReads;
+  receiveChannelOrder: ReceiveChannelOrder;
 }> = function (app, opts) {
   const appTyped = app.withTypeProvider<ZodTypeProvider>();
 
@@ -48,39 +36,28 @@ export const OrdersWebhookRoutes: FastifyPluginCallbackZod<{
       const tenantId = req.headers['x-tenant-id'];
       const idempotencyKey = req.headers['idempotency-key'];
       const fingerprint = generateFingerprint(req);
-      const memoryKey = `${tenantId}:${idempotencyKey}`;
 
-      const idempotencyRegister = memory.get(memoryKey);
-
-      if (idempotencyRegister) {
-        if (idempotencyRegister.fingerprint !== fingerprint) {
-          problem(reply, 422, 'Unprocessable Entity', 'Idempotency match failed');
-          return reply;
-        }
-        if (idempotencyRegister.state === 'in_progress') {
-          problem(reply, 409, 'Conflict', 'Request already being processed');
-          return reply;
-        }
-        if (!idempotencyRegister.body) {
-          throw new Error('Memory map for idempotency is missing body for done request');
+      const useCaseResponse = await opts.receiveChannelOrder(
+        tenantId,
+        idempotencyKey,
+        fingerprint,
+        req.body,
+      );
+      if (useCaseResponse.kind === 'replay') {
+        if (useCaseResponse.response.status !== 201) {
+          throw new Error(`unexpected stored status`);
         }
         return reply
-          .status(idempotencyRegister.status || 201)
+          .status(useCaseResponse.response.status)
           .header('idempotent-replayed', 'true')
-          .send(idempotencyRegister.body);
+          .send(useCaseResponse.response.body as OrderDto);
       }
 
-      memory.set(memoryKey, { fingerprint, state: 'in_progress' });
-
-      try {
-        const order = await opts.createOrder(tenantId, req.body);
-        memory.set(memoryKey, { fingerprint, state: 'done', body: order, status: 201 });
-
-        return await reply.status(201).send(order);
-      } catch (err) {
-        memory.delete(idempotencyKey);
-        throw err;
+      if (useCaseResponse.kind === 'mismatch') {
+        return problem(reply, 422, 'Unprocessable Entity', 'Idempotency match failed');
       }
+
+      return reply.status(201).send(useCaseResponse.response.body as OrderDto);
     },
   );
 };

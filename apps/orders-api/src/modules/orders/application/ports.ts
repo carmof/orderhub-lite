@@ -1,5 +1,11 @@
 import type { OrderDto, OrderStatus } from '@orderhub/contracts';
+import type { IdempotencyKeys } from '#src/shared/idempotency/idempotency-keys.js';
 import type { Order } from '../domain/order.js';
+
+export type OrdersTx = {
+  orders: OrderRepository;
+  idempotency: IdempotencyKeys;
+};
 
 export interface OrderRepository {
   add(order: Order): Promise<void>;
