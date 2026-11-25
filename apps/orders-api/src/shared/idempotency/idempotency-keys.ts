@@ -1,15 +1,15 @@
-export type StoredResponse = {
-  status: number | null;
+export type StoredResponse<S = number> = {
+  status: S | null;
   body: unknown;
 };
 
-export type Claim =
+export type Claim<S extends number = number> =
+  | { kind: 'mismatch' }
   | { kind: 'new' }
   | {
       kind: 'replay';
-      response: StoredResponse;
-    }
-  | { kind: 'mismatch' };
+      response: StoredResponse<S>;
+    };
 
 export interface IdempotencyKeys {
   claim(tenantId: string, key: string, requestHash: string): Promise<Claim>;
