@@ -1,7 +1,7 @@
 import z from 'zod';
 
-export const HelthCheckResponseSchema = z.object({
+export const HealthCheckResponseSchema = z.object({
   status: z.string(),
 });
 
-export type HelthCheckResponse = z.infer<typeof HelthCheckResponseSchema>;
+export type HealthCheckResponse = z.infer<typeof HealthCheckResponseSchema>;

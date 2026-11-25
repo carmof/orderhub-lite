@@ -9,4 +9,4 @@ export {
   type OrderItem,
   type OrderCurrency,
 } from './order.js';
-export { type HelthCheckResponse, HelthCheckResponseSchema } from './health.js';
+export { type HealthCheckResponse, HealthCheckResponseSchema } from './health.js';
