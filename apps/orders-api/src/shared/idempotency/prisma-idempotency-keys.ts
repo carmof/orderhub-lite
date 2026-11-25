@@ -9,11 +9,16 @@ class PrismaIdempotencyKeys implements IdempotencyKeys {
     const queryResult = await this.db.$queryRawTyped(
       claimIdempotencyKey(tenantId, key, requestHash),
     );
-    if (queryResult.length === 1 && queryResult[0]?.key) {
-      return {
-        kind: 'new',
-      };
+
+    if (queryResult.length === 1) {
+      if (queryResult[0]?.key) {
+        return {
+          kind: 'new',
+        };
+      }
+      throw new Error(`Expected created idempotency key not returned by query`);
     }
+
     const previousIdempotencyKey = await this.db.idempotencyKey.findUnique({
       where: {
         tenantId_key: {
@@ -42,7 +47,7 @@ class PrismaIdempotencyKeys implements IdempotencyKeys {
     };
   }
 
-  async complete(tenantId: string, key: string, response: StoredResponse): Promise<void> {
+  async complete(tenantId: string, key: string, response: StoredResponse<201>): Promise<void> {
     await this.db.idempotencyKey.update({
       data: {
         state: 'DONE',
