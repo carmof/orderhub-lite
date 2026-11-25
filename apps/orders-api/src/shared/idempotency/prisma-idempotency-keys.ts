@@ -46,7 +46,7 @@ class PrismaIdempotencyKeys implements IdempotencyKeys {
     await this.db.idempotencyKey.update({
       data: {
         state: 'DONE',
-        responseBody: JSON.stringify(response.body),
+        responseBody: response.body as Prisma.InputJsonValue,
         responseStatus: response.status,
       },
       where: {
