@@ -1,5 +1,6 @@
 import type { AppDeps } from './app.js';
 import type { Config } from './config.js';
+import { createHealthCheckModule } from './modules/health/index.js';
 import { createOrdersModule } from './modules/orders/index.js';
 import { createPrisma } from './shared/db/prisma.js';
 import type { Infra } from './shared/infra.js';
@@ -19,8 +20,9 @@ function buildInfra(config: Config): Infra {
 
 export function buildDeps(config: Config): AppDeps {
   const infra = buildInfra(config);
-  const orders = createOrdersModule({ infra });
-  const modules: ServiceModule[] = [orders];
+  const ordersModule = createOrdersModule({ infra });
+  const healthCheckModule = createHealthCheckModule({ rediness: infra.readiness });
+  const modules: ServiceModule[] = [healthCheckModule, ordersModule];
 
   return {
     config,
