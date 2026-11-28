@@ -10,3 +10,4 @@ export {
   type OrderCurrency,
 } from './order.js';
 export { type HealthCheckResponse, HealthCheckResponseSchema } from './health.js';
+export { type ProblemResponseDto, problemResponseDtoSchema } from './http-defaults.js';
