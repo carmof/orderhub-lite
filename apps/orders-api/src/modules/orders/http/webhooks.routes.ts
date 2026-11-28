@@ -1,6 +1,12 @@
 import { createHash } from 'crypto';
-import { CreateOrderInputSchema, OrderDtoSchema } from '@orderhub/contracts';
+import {
+  CreateOrderInputSchema,
+  OrderDtoSchema,
+  problemResponseDtoSchema,
+  type OrderDto,
+} from '@orderhub/contracts';
 import { problem } from '#src/shared/http/problem.js';
+import { idempotencyReplayReply } from '#src/shared/http/replay.js';
 import { type FastifyRequest } from 'fastify';
 import type { FastifyPluginCallbackZod, ZodTypeProvider } from 'fastify-type-provider-zod';
 import z from 'zod';
@@ -15,8 +21,6 @@ const generateFingerprint = (request: FastifyRequest) => {
   return createHash('sha256').update(JSON.stringify(request.body)).digest('hex');
 };
 
-type OrderDto = z.infer<typeof OrderDtoSchema>;
-
 export const OrdersWebhookRoutes: FastifyPluginCallbackZod<{
   receiveChannelOrder: ReceiveChannelOrder;
 }> = function (app, opts) {
@@ -29,7 +33,10 @@ export const OrdersWebhookRoutes: FastifyPluginCallbackZod<{
         headers: HEADERS_SCHEMA,
         params: z.object({ channel: z.string().min(1) }),
         body: CreateOrderInputSchema,
-        response: { 201: OrderDtoSchema },
+        response: {
+          201: OrderDtoSchema,
+          422: problemResponseDtoSchema,
+        },
       },
     },
     async function (req, reply) {
@@ -47,10 +54,11 @@ export const OrdersWebhookRoutes: FastifyPluginCallbackZod<{
         if (useCaseResponse.response.status !== 201) {
           throw new Error(`unexpected stored status`);
         }
-        return reply
-          .status(useCaseResponse.response.status)
-          .header('idempotent-replayed', 'true')
-          .send(useCaseResponse.response.body as OrderDto);
+        return idempotencyReplayReply(
+          reply,
+          useCaseResponse.response.status,
+          useCaseResponse.response.body as OrderDto,
+        );
       }
 
       if (useCaseResponse.kind === 'mismatch') {
